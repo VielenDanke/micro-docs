@@ -55,7 +55,7 @@ message Error { // error description
 
 # Code generation
 
-After proto file has been created our next step will be code generation. For those purposes we are using protoc-gen-micro. It generates code base on proto description for server and client sides. The key thing here - imports have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like example below:
+After proto file has been created our next step will be code generation. For those purposes we are using protoc-gen-micro. It generates code based on proto description for server and client sides. The key thing here - imports have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like example below:
 
 ```go
 // +build tools
@@ -79,7 +79,7 @@ ARGS="-I${INC} -I${INC}/third_party/googleapis"
 protoc $ARGS -Iproto --openapiv2_out=disable_default_errors=true,allow_merge=true:./proto/ --go_out=paths=source_relative:./proto/ --micro_out=components="micro|http",debug=true,paths=source_relative:./proto/ proto/*.proto
 ```
 
-Here we said we want to generate swagger/openapi specification, go code with structures, micro interfaces and http client, server. All generated code will be stored in proto directory.
+Here we want to generate swagger/openapi specification, go code with structures, micro interfaces and http client, server. All generated code will be stored in proto directory.
 
 # Service
 
