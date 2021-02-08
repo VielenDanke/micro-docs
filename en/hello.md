@@ -7,9 +7,9 @@ Micro does not oblige to use protobuf. But for better experience in communicatio
 Usually .proto files located in the directory of the project. If amount of services which are using .proto file are growing up, the best way to share .proto files is using any of storage (github, gitlab etc.).
 
 File .proto usually contains from three part:
-- support - contains imports and package names
+- header - contains imports and package names
 - service - contains service names and methods with annotations
-- messages - description for sructures, which are using by service
+- messages - description for structures, which are using by service
 
 # Example
 
