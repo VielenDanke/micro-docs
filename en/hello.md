@@ -3,8 +3,6 @@
 ## Proto
 
 Micro does not oblige to use protobuf. For better experience in communication between microservices (client -
-server) strongly recommended to use .proto files. It insures developers on a both sides they are using the same
-generated .proto structures and services.
 
 Usually .proto files located in the directory of the project. If amount of services which are using .proto file are
 growing up, the best way to share .proto files is using any of storage (github, gitlab etc.).
@@ -61,8 +59,6 @@ message Error {// error description
 
 When proto file has been created our next step will be code generation. For those purposes we are using
 protoc-gen-micro. It generates code based on proto description for a server and client sides. The key thing here - imports
-have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like
-example below:
 
 ```go
 // +build tools
@@ -224,7 +220,6 @@ func main() {
 Important note:
 
 1. In order to use gRPC instead of http - need to replace http to grpc in --micro_out=components="micro|http"
-   in script generator
 2. Implementation for gRPC in code has only one difference - need to pass grpcsrv.NewServer()
    instead of httpsrv.NewServer(). Library could be found here:
 
