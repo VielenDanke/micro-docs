@@ -7,9 +7,9 @@ Micro does not oblige to use protobuf. But for better experience in communicatio
 Usually .proto files located in the directory of the project. If amount of services which are using .proto file are growing up, the best way to share .proto files is using any of storage (github, gitlab etc.).
 
 File .proto usually contains from three part:
-- support - contains imports and package names
+- header - contains imports and package names
 - service - contains service names and methods with annotations
-- messages - description for sructures, which are using by service
+- messages - description for structures, which are using by service
 
 # Example
 
@@ -55,7 +55,7 @@ message Error { // error description
 
 # Code generation
 
-After proto file has been created our next step will be code generation. For those purposes we are using protoc-gen-micro. It generates code base on proto description for server and client sides. The key thing here - imports have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like example below:
+After proto file has been created our next step will be code generation. For those purposes we are using protoc-gen-micro. It generates code based on proto description for server and client sides. The key thing here - imports have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like example below:
 
 ```go
 // +build tools
@@ -79,7 +79,7 @@ ARGS="-I${INC} -I${INC}/third_party/googleapis"
 protoc $ARGS -Iproto --openapiv2_out=disable_default_errors=true,allow_merge=true:./proto/ --go_out=paths=source_relative:./proto/ --micro_out=components="micro|http",debug=true,paths=source_relative:./proto/ proto/*.proto
 ```
 
-Here we said we want to generate swagger/openapi specification, go code with structures, micro interfaces and http client, server. All generated code will be stored in proto directory.
+Here we want to generate swagger/openapi specification, go code with structures, micro interfaces and http client, server. All generated code will be stored in proto directory.
 
 # Service
 
