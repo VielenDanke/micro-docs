@@ -142,7 +142,7 @@ func NewGithubHandler() *GithubHandler {
 func (h *GithubHandler) LookupUser(ctx context.Context, req *pb.LookupUserReq, rsp *pb.LookupUserRsp) error {
 	if req.GetUsername() == "" || req.GetUsername() != "vtolstov" {
 		httpsrv.SetRspCode(ctx, http.StatusBadRequest)
-        return &pb.Error{Message: "name is not correct"}
+		return &pb.Error{Message: "name is not correct"}
 	}
 	rsp.Name = "Vasiliy Tolstov"
 	httpsrv.SetRspCode(ctx, http.StatusOK)
@@ -157,15 +157,15 @@ package main
 
 import (
 	"context"
-    mhttp "github.com/unistack-org/micro-client-http/v3"
+	mhttp "github.com/unistack-org/micro-client-http/v3"
 	jsoncodec "github.com/unistack-org/micro-codec-json/v3"
 	httpsrv "github.com/unistack-org/micro-server-http/v3"
 	"github.com/unistack-org/micro/v3"
-    "github.com/unistack-org/micro/v3/client"
-    "github.com/unistack-org/micro/v3/logger"
+	"github.com/unistack-org/micro/v3/client"
+	"github.com/unistack-org/micro/v3/logger"
 	"github.com/unistack-org/micro/v3/server"
 	"github.com/unistack-org/micro-tests/client/http/handler"
-    pb "github.com/unistack-org/micro-tests/client/http/proto"
+	pb "github.com/unistack-org/micro-tests/client/http/proto"
 )
 
 func main() {
@@ -175,15 +175,15 @@ func main() {
 	/*
 	Options for service, pass the context with cancel
 	 */
-   options := append([]micro.Option{},
-      micro.Servers(httpsrv.NewServer()),
-      micro.Client(mhttp.NewClient()),
-      micro.Context(ctx),
-      micro.Name("github-service"),
-      micro.Version("1.0"),
-      micro.Address(":8080"),
-   )
-   srv := micro.NewService(options...)
+	options := append([]micro.Option{}, 
+	    micro.Servers(httpsrv.NewServer()),
+	    micro.Client(mhttp.NewClient()),
+	    micro.Context(ctx),
+	    micro.Name("github-service"),
+	    micro.Version("1.0"), 
+	    micro.Address(":8080"),
+	)
+	srv := micro.NewService(options...)
 
 	// create codec
 	c := jsoncodec.NewCodec()
@@ -196,13 +196,13 @@ func main() {
 			server.Address(":8080"),             // server port
 			server.Context(ctx),                 // context with cancel
 			server.Codec("application/json", c), // content-type and codec for marshal/unmarshal
-		)),
-       micro.Client(mhttp.NewClient(
-          client.Name("github-client"),
-          client.Context(ctx),
-          client.Codec("application/json", jsoncodec.NewCodec()),
-          client.ContentType("application/json"),
-       )),
+		)), 
+		micro.Client(mhttp.NewClient(
+			client.Name("github-client"), 
+			client.Context(ctx), 
+			client.Codec("application/json", jsoncodec.NewCodec()), 
+			client.ContentType("application/json"), 
+			)),
 	); err != nil {
 		logger.Error(ctx, err)
 	}
