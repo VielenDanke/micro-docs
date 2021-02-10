@@ -118,7 +118,102 @@ func main() {
 
 ## Server
 
-```go
+The code below is describing creation server for Github service
 
+First step - creating handler
+
+```go
+package handler
+
+import (
+	"context"
+	"errors"
+	httpsrv "github.com/unistack-org/micro-server-http/v3"
+	pb "github.com/vielendanke/event-service/proto"
+	"net/http"
+)
+
+type GithubHandler struct {}
+
+func NewGithubHandler() *GithubHandler {
+	return &GithubHandler{}
+}
+
+func (h *GithubHandler) LookupUser(ctx context.Context, req *pb.LookupUserReq, rsp *pb.LookupUserRsp) error {
+	if req.GetUsername() == "" || req.GetUsername() != "vtolstov" {
+		httpsrv.SetRspCode(ctx, http.StatusBadRequest)
+		return errors.New("name is not correct")
+	}
+	rsp.Name = "Vasiliy Tolstov"
+	httpsrv.SetRspCode(ctx, http.StatusOK)
+	return nil
+}
 ```
 
+Second step - creating server
+
+```go
+package main
+
+import (
+	"context"
+	jsoncodec "github.com/unistack-org/micro-codec-json/v3"
+	httpsrv "github.com/unistack-org/micro-server-http/v3"
+	"github.com/unistack-org/micro/v3"
+	"github.com/unistack-org/micro/v3/logger"
+	"github.com/unistack-org/micro/v3/server"
+	"github.com/vielendanke/event-service/internal/app/eventservice/handler"
+	pb "github.com/vielendanke/event-service/proto"
+)
+
+func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	/*
+	Options for service, pass the context with cancel
+	 */
+	options := append([]micro.Option{},
+		micro.Context(ctx),
+	)
+	// Create new service
+	srv := micro.NewService(options...)
+
+	// create codec
+	c := jsoncodec.NewCodec()
+
+	// Initialization service
+	if err := srv.Init(
+		micro.Servers(httpsrv.NewServer(
+			server.Name("github-service"),       // server name
+			server.Version("1.0"),               // server version
+			server.Address(":6060"),             // server port
+			server.Context(ctx),                 // context with cancel
+			server.Codec("application/json", c), // content-type and codec for marshal/unmarshal
+		)),
+	); err != nil {
+		logger.Error(ctx, err)
+	}
+	
+	// create new github handler
+	eh := handler.NewGithubHandler()
+
+	// register handler on the server
+	if err := pb.RegisterGithubHandler(srv.Server("event-service"), eh); err != nil {
+		logger.Error(ctx, err)
+	}
+
+	// run service on port 6060
+	if err := srv.Run(); err != nil {
+		logger.Error(ctx, err)
+	}
+}
+```
+Important note: 
+1. In order to user gRPC instead of http - need to replace http to grpc in --micro_out=components="micro|http" 
+   in script generator
+2. Implementation for gRPC in code has only one difference - need to pass grpcsrv.NewServer()
+instead of httpsrv.NewServer(). Library could be found here:
+````
+github.com/unistack-org/micro-server-grpc
+````
