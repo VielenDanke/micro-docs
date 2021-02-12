@@ -2,7 +2,9 @@
 
 ## Proto
 
-Micro does not oblige to use protobuf. For better experience in communication between microservices (client -
+Micro does not oblige to use protobuf. But for better experience in communication between microservices (client -
+server) strongly recommended to use .proto files. It insures developers on a both sides they are using the same
+generated .proto structures and services.
 
 Usually .proto files located in the directory of the project. If amount of services which are using .proto file are
 growing up, the best way to share .proto files is using any of storage (github, gitlab etc.).
@@ -57,8 +59,10 @@ message Error {// error description
 
 # Code generation
 
-When proto file has been created our next step will be code generation. For those purposes we are using
-protoc-gen-micro. It generates code based on proto description for a server and client sides. The key thing here - imports
+When a proto file has been created our next step will be code generation. For those purposes we are using
+protoc-gen-micro. It generates code based on proto description for server and client sides. The key thing here - imports
+have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like
+example below:
 
 ```go
 // +build tools
