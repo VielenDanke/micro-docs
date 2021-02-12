@@ -165,7 +165,7 @@ import (
 	"github.com/unistack-org/micro/v3/client"
 	"github.com/unistack-org/micro/v3/logger"
 	"github.com/unistack-org/micro/v3/server"
-	"github.com/unistack-org/micro-tests/client/http/handler"
+	"github.com/unistack-org/micro-tests/server/http/handler"
 	pb "github.com/unistack-org/micro-tests/client/http/proto"
 )
 
@@ -174,7 +174,7 @@ func main() {
 	defer cancel()
 
 	/*
-	    Options for service, pass the context with cancel
+	   Опции для сервиса, контекст с функцией cancel()
 	*/
 	options := append([]micro.Option{},
 		micro.Server(httpsrv.NewServer(
@@ -192,20 +192,20 @@ func main() {
 		)),
 		micro.Context(ctx),
 	)
-	// create new service
+	// Создание нового сервиса и передача в него опций
 	srv := micro.NewService(options...)
 
-	// init all stuff
+	// Инициализируем все опции в сервисе
 	if err := srv.Init(); err != nil {
 		logger.Fatal(ctx, err)
 	}
-	// create handler
+	// Создаем реализацию для сервера
 	eh := handler.NewGithubHandler()
-	// register handler in server
+	// Регистрируем реализацию в сервере
 	if err := pb.RegisterGithubHandler(srv.Server(), eh); err != nil {
 		logger.Fatal(ctx, err)
 	}
-	// run service
+	// Запускаем сервис
 	if err := srv.Run(); err != nil {
 		logger.Fatal(ctx, err)
 	}

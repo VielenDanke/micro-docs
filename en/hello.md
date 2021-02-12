@@ -59,7 +59,7 @@ message Error {// error description
 
 # Code generation
 
-After proto file has been created our next step will be code generation. For those purposes we are using
+When a proto file has been created our next step will be code generation. For those purposes we are using
 protoc-gen-micro. It generates code based on proto description for server and client sides. The key thing here - imports
 have to be available. To make this happen we have to install them. The easiest way to do this - using file tools.go like
 example below:
@@ -89,7 +89,7 @@ protoc $ARGS -Iproto --openapiv2_out=disable_default_errors=true,allow_merge=tru
 ```
 
 Here we want to generate swagger/openapi specification, go code with structures, micro interfaces and http client,
-server. All generated code will be stored in proto directory.
+server. All generated code will be stored in a proto directory.
 
 # Service
 
@@ -174,7 +174,7 @@ import (
 	"github.com/unistack-org/micro/v3/client"
 	"github.com/unistack-org/micro/v3/logger"
 	"github.com/unistack-org/micro/v3/server"
-	"github.com/unistack-org/micro-tests/client/http/handler"
+	"github.com/unistack-org/micro-tests/server/http/handler"
 	pb "github.com/unistack-org/micro-tests/client/http/proto"
 )
 
@@ -223,8 +223,7 @@ func main() {
 
 Important note:
 
-1. In order to user gRPC instead of http - need to replace http to grpc in --micro_out=components="micro|http"
-   in script generator
+1. In order to use gRPC instead of http - need to replace http to grpc in --micro_out=components="micro|http"
 2. Implementation for gRPC in code has only one difference - need to pass grpcsrv.NewServer()
    instead of httpsrv.NewServer(). Library could be found here:
 
